@@ -31,6 +31,28 @@ router.get('/simple/get', function(req, res) {
     msg: 'simple page is ok! hello world Simple Page!'
   })
 })
+// base 路由
+router.get('/base/get', function(req, res) {
+  res.json(req.query)
+})
+// post 路由
+router.post('/postNoHeaders/plainObj', function(req, res) {
+  res.json(req.body)
+})
+router.post('/postNoHeaders/buffer', function(req, res) {
+  // 传输 buffer 数据的传输方案
+  let msg = []
+  req.on('data', (chunk) => {
+    if(chunk) msg.push(chunk)
+  })
+  req.on('end', () => {
+    let buf = Buffer.concat(msg)
+    res.json(buf.toJSON())
+  })
+})
+router.post('/postHeaders/plainObj', function(req, res) {
+  res.json(req.body)
+})
 
 app.use(router)
 
