@@ -53,6 +53,12 @@ router.post('/postNoHeaders/buffer', function(req, res) {
 router.post('/postHeaders/plainObj', function(req, res) {
   res.json(req.body)
 })
+router.post('/basePromise/jest1', function(req, res) {
+  res.json(req.body)
+})
+router.post('/basePromise/jest2', function(req, res) {
+  res.json(req.body)
+})
 
 app.use(router)
 
