@@ -25,58 +25,23 @@ app.use(bodyParser.urlencoded({ extends: true }))
 
 const router = express.Router()
 
+const {  
+  registerBaseRouters,
+  registerBasePromiseRouters,
+  registerErrorRouters,
+  registerExtendRouters,
+  registerSimpleRouters,
+  registerPostHeadersRouters,
+  registerPostNoHeadersRouters } = registerRouters()
+
 // 路由：
-router.get('/simple/get', function(req, res) {
-  res.json({
-    msg: 'simple page is ok! hello world Simple Page!'
-  })
-})
-// base 路由
-router.get('/base/get', function(req, res) {
-  res.json(req.query)
-})
-// post 路由
-router.post('/postNoHeaders/plainObj', function(req, res) {
-  res.json(req.body)
-})
-router.post('/postNoHeaders/buffer', function(req, res) {
-  // 传输 buffer 数据的传输方案
-  let msg = []
-  req.on('data', (chunk) => {
-    if(chunk) msg.push(chunk)
-  })
-  req.on('end', () => {
-    let buf = Buffer.concat(msg)
-    res.json(buf.toJSON())
-  })
-})
-router.post('/postHeaders/plainObj', function(req, res) {
-  res.json(req.body)
-})
-router.post('/basePromise/jest1', function(req, res) {
-  res.json(req.body)
-})
-router.post('/basePromise/jest2', function(req, res) {
-  res.json(req.body)
-})
-// error 测试demo：
-router.get('/error/get', function(req, res) {
-  if(Math.random() > 0.5) {
-    res.json({
-      msg: 'hello world'
-    })
-  } else {
-    res.status(500)
-    res.end()
-  }
-})
-router.get('/error/timeout', function(req, res) {
-  setTimeout(() => {
-    res.json({
-      msg: 'hello world'
-    })
-  }, 3000)
-})
+registerBaseRouters()
+registerBasePromiseRouters()
+registerErrorRouters()
+registerExtendRouters()
+registerSimpleRouters()
+registerPostHeadersRouters()
+registerPostNoHeadersRouters()
 
 app.use(router)
 
@@ -84,3 +49,125 @@ const port = process.env.PORT || 8080
 module.exports = app.listen(port, () => {
   console.log(`Server listening on http://localhost:${port}, Ctrl+C to stop`);
 })
+
+
+
+
+/**
+ * @description 存放后端路由
+ * @author 氧化氢
+ */
+function registerRouters() {
+  function registerExtendRouters() {
+    router.get('/extend/get', function(req, res) {
+     res.json({
+       msg: 'hello world'
+     })
+    })
+    router.options('/extend/options', function(req, res) {
+      res.end()
+    })
+    router.delete('/extend/delete', function(req, res) {
+      res.end()
+    })
+    router.head('/extend/head', function(req, res) {
+      res.end()
+    })
+    router.post('/extend/post', function(req, res) {
+      res.json(req.body)
+    })
+    router.put('/extend/put', function(req, res) {
+      res.json(req.body)
+    })
+    router.patch('/extend/patch', function(req, res) {
+      res.json(req.body)
+    })
+
+    router.get('/extend/user', function(req, res) {
+      res.json({
+        code: 0,
+        message: 'ok',
+        result: {
+          name: 'James',
+          age: 18
+        }
+      })
+    })
+  }
+  
+  function registerErrorRouters() {
+    router.get('/error/get', function(req, res) {
+      if(Math.random() > 0.5) {
+        res.json({
+          msg: 'hello world'
+        })
+      } else {
+        res.status(500)
+        res.end()
+      }
+    })
+    router.get('/error/timeout', function(req, res) {
+      setTimeout(() => {
+        res.json({
+          msg: 'hello world'
+        })
+      }, 3000)
+    })
+  }
+  
+  function registerBasePromiseRouters() {
+    router.post('/basePromise/jest1', function(req, res) {
+      res.json(req.body)
+    })
+    router.post('/basePromise/jest2', function(req, res) {
+      res.json(req.body)
+    })
+  }
+  
+  function registerPostHeadersRouters() {
+    router.post('/postHeaders/plainObj', function(req, res) {
+      res.json(req.body)
+    })
+  }
+  
+  function registerPostNoHeadersRouters() {
+    router.post('/postNoHeaders/plainObj', function(req, res) {
+      res.json(req.body)
+    })
+    router.post('/postNoHeaders/buffer', function(req, res) {
+      // 传输 buffer 数据的传输方案
+      let msg = []
+      req.on('data', (chunk) => {
+        if(chunk) msg.push(chunk)
+      })
+      req.on('end', () => {
+        let buf = Buffer.concat(msg)
+        res.json(buf.toJSON())
+      })
+    })
+  }
+  
+  function registerBaseRouters() {
+    router.get('/base/get', function(req, res) {
+      res.json(req.query)
+    })
+  }
+  
+  function registerSimpleRouters() {
+    router.get('/simple/get', function(req, res) {
+      res.json({
+        msg: 'simple page is ok! hello world Simple Page!'
+      })
+    })
+  }
+
+  return {
+    registerBaseRouters,
+    registerBasePromiseRouters,
+    registerErrorRouters,
+    registerExtendRouters,
+    registerSimpleRouters,
+    registerPostHeadersRouters,
+    registerPostNoHeadersRouters
+  }
+}
