@@ -53,6 +53,7 @@ export default function xhr(config: AxiosRquestConfig): AxiosPromise {
         request.setRequestHeader(name, headers[name])
       }
     })
+    console.log(data)
 
     request.send(data)
 

@@ -1,3 +1,8 @@
+/**
+ * @description 封装一些工具函数
+ * @author 氧化氢
+ */
+
 const toString = Object.prototype.toString
 
 export function isDate(val: any): val is Date {
@@ -18,4 +23,28 @@ export function extend<T, U>(to: T, from: U): T & U {
   }
 
   return to as T & U
+}
+
+export function deepMerge(...objs: any[]): any {
+  const result = Object.create(null)
+
+  objs.forEach(obj => {
+    if (obj) {
+      Object.keys(obj).forEach(key => {
+        const val = obj[key]
+        if (isPlainObject(val)) {
+          // 如果已经存在，则存在的与 val 合并一下
+          if (isPlainObject(result[key])) {
+            result[key] = deepMerge(result[key], val)
+          } else {
+            result[key] = deepMerge(val)
+          }
+        } else {
+          result[key] = val
+        }
+      })
+    }
+  })
+
+  return result
 }

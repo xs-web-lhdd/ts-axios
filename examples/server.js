@@ -34,6 +34,7 @@ const {
   registerPostHeadersRouters,
   registerPostNoHeadersRouters,
   registerInterceptorRouters, 
+  registerConfigRouters
   } = registerRouters()
 
 // 路由：
@@ -45,6 +46,7 @@ registerSimpleRouters()
 registerPostHeadersRouters()
 registerPostNoHeadersRouters()
 registerInterceptorRouters()
+registerConfigRouters()
 
 app.use(router)
 
@@ -61,6 +63,12 @@ module.exports = app.listen(port, () => {
  * @author 氧化氢
  */
 function registerRouters() {
+  function registerConfigRouters() {
+    router.post('/config/post', function(req, res) {
+      res.json(req.body)
+    })
+  }
+
   function registerInterceptorRouters() {
     router.get('/interceptor/get', function(req, res) {
       res.end('hello')
@@ -179,5 +187,6 @@ function registerRouters() {
     registerPostHeadersRouters,
     registerPostNoHeadersRouters,
     registerInterceptorRouters,
+    registerConfigRouters,
   }
 }

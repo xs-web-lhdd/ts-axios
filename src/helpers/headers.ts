@@ -3,7 +3,8 @@
  * @author 氧化氢
  */
 
-import { isPlainObject } from './util'
+import { Method } from '../types'
+import { deepMerge, isPlainObject } from './util'
 
 function normalzeHeaderName(headers: any, normalzeHeaderName: string): void {
   if (!headers) return
@@ -41,4 +42,18 @@ export function parseHeaders(headers: string): any {
   })
 
   return parsed
+}
+
+// 把 headers 这个对象拍成一级，就把 common 和对应 method 里面的内容取出来，返回一个新的 headers
+export function flattenHeaders(headers: any, method: Method): any {
+  if (!headers) return headers
+
+  headers = deepMerge(headers.common, headers[method], headers)
+
+  const methodsToDelete = ['get', 'delete', 'options', 'head', 'post', 'put', 'patch', 'common']
+  methodsToDelete.forEach(method => {
+    delete headers[method]
+  })
+
+  return headers
 }
