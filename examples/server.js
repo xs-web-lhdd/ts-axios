@@ -34,7 +34,8 @@ const {
   registerPostHeadersRouters,
   registerPostNoHeadersRouters,
   registerInterceptorRouters, 
-  registerConfigRouters
+  registerConfigRouters,
+  registerCancelRouters,
   } = registerRouters()
 
 // 路由：
@@ -47,6 +48,7 @@ registerPostHeadersRouters()
 registerPostNoHeadersRouters()
 registerInterceptorRouters()
 registerConfigRouters()
+registerCancelRouters()
 
 app.use(router)
 
@@ -63,6 +65,20 @@ module.exports = app.listen(port, () => {
  * @author 氧化氢
  */
 function registerRouters() {
+  function registerCancelRouters() {
+    router.get('/cancel/get', function(req, res) {
+      setTimeout(() => {
+        res.json('hello')
+      }, 1000)
+    })
+
+    router.post('/cancel/post', function(req, res) {
+      setTimeout(() => {
+        res.json(req.body)
+      }, 1000)
+    })
+  }
+
   function registerConfigRouters() {
     router.post('/config/post', function(req, res) {
       res.json(req.body)
@@ -188,5 +204,6 @@ function registerRouters() {
     registerPostNoHeadersRouters,
     registerInterceptorRouters,
     registerConfigRouters,
+    registerCancelRouters,
   }
 }
