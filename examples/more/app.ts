@@ -6,6 +6,7 @@
 import axios from '../../src'
 import 'nprogress/nprogress.css'
 import NProgress from 'nprogress'
+import { AxiosError } from '../../src/helpers/error';
 
 // // 跨域携带 cookie ：
 // document.cookie = 'a=b'
@@ -30,61 +31,142 @@ import NProgress from 'nprogress'
 //   console.log(res);
 // })
 
-const instance = axios.create()
 
-function calculcatePercentage(loaded: number, total: number) {
-  return Math.floor(loaded * 1.0) / total
-}
+// 验证上传和下载：
+// const instance = axios.create()
 
-function loadProgressBar() {
-  const setupStartProgress = () => {
-    instance.interceptors.request.use(config => {
-      NProgress.start()
-      return config
-    })
-  }
+// function calculcatePercentage(loaded: number, total: number) {
+//   return Math.floor(loaded * 1.0) / total
+// }
 
-  const setupUpdateProgress = () => {
-    const update = (e: ProgressEvent) => {
-      console.log(e);
-      NProgress.set(calculcatePercentage(e.loaded, e.total))
-    }
-    instance.defaults.onDownloadProgress = update
-    instance.defaults.onUploadProgress = update
-  }
+// function loadProgressBar() {
+//   const setupStartProgress = () => {
+//     instance.interceptors.request.use(config => {
+//       NProgress.start()
+//       return config
+//     })
+//   }
 
-  const setupStopProgress = () => {
-    instance.interceptors.response.use(response => {
-      NProgress.done()
-      return response
-    }, error => {
-      NProgress.done()
-      return Promise.reject(error)
-    })
-  }
+//   const setupUpdateProgress = () => {
+//     const update = (e: ProgressEvent) => {
+//       console.log(e);
+//       NProgress.set(calculcatePercentage(e.loaded, e.total))
+//     }
+//     instance.defaults.onDownloadProgress = update
+//     instance.defaults.onUploadProgress = update
+//   }
 
-  setupStartProgress()
-  setupUpdateProgress()
-  setupStopProgress()
-}
+//   const setupStopProgress = () => {
+//     instance.interceptors.response.use(response => {
+//       NProgress.done()
+//       return response
+//     }, error => {
+//       NProgress.done()
+//       return Promise.reject(error)
+//     })
+//   }
 
-loadProgressBar()
+//   setupStartProgress()
+//   setupUpdateProgress()
+//   setupStopProgress()
+// }
 
-const downloadEl = document.getElementById('download')
+// loadProgressBar()
 
-downloadEl!.addEventListener('click', e => {
-  // 输入下载图片的 url
-  instance.get('')
-})
+// const downloadEl = document.getElementById('download')
 
-const uploadEl = document.getElementById('upload')
+// downloadEl!.addEventListener('click', e => {
+//   // 输入下载图片的 url
+//   instance.get('')
+// })
 
-uploadEl!.addEventListener('click', e => {
-  const data = new FormData()
-  const fileEl = document.getElementById('file') as HTMLInputElement
-  if(fileEl.files) {
-    data.append('file', fileEl.files[0])
+// const uploadEl = document.getElementById('upload')
 
-    instance.post('/more/upload', data)
-  }
-})
+// uploadEl!.addEventListener('click', e => {
+//   const data = new FormData()
+//   const fileEl = document.getElementById('file') as HTMLInputElement
+//   if(fileEl.files) {
+//     data.append('file', fileEl.files[0])
+
+//     instance.post('/more/upload', data)
+//   }
+// })
+
+// http 授权：
+// axios.post('/more/post', {
+//   a: 1
+// }, {
+//   auth: {
+//     username: 'James',
+//     password: '123456'
+//   }
+// }).then(res => {
+//   console.log(res);
+// })
+
+// 验证自定义合法授权码：
+// axios.get('/more/304').then(res => {
+//   console.log(res);
+// }).catch((e: AxiosError) => {
+//   console.log(e.message);
+// })
+
+// axios.get('/more/304', {
+//   validateStatus(status) {
+//     return status >= 200 && status < 400
+//   }
+// }).then(res => {
+//   console.log(res);
+// }).catch((e: AxiosError) => {
+//   console.log(e.message);
+// })
+
+// 自定义参数序列化：
+// import qs from 'qs'
+
+// axios.get('/more/get', {
+//   params: new URLSearchParams('a=b&c=d')
+// }).then(res => {
+//   console.log(res);
+// })
+
+// axios.get('/more/get', {
+//   params: {
+//     a: 1,
+//     b: 2,
+//     c: ['a', 'b', 'c']
+//   }
+// }).then(res => {
+//   console.log(res);
+// })
+
+// const instance = axios.create({
+//   paramsSerializer(params) {
+//     return qs.stringify(params, { arrayFormat: 'brackets' })
+//   }
+// })
+
+// instance.get('/more/get', {
+//   params: {
+//     a: 1,
+//     b: 2,
+//     c: ['a', 'b', 'c']
+//   }
+// }).then(res => {
+//   console.log(res);
+// })
+
+// baseURL：
+// let instance = axios.create({
+//   baseURL: 'http://localhost:8080'
+// })
+
+// instance.post('/more/url', {
+//   a: 1,
+//   b: 2
+// })
+
+// instance.post('http://localhost:8080/more/url', {
+//   c: 3,
+//   d: 4
+// })
